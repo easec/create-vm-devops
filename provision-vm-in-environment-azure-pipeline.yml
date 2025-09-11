@@ -17,7 +17,7 @@ pr: none
 variables:
   environmentName: "provision-vm-example-${{ variables['Build.SourceVersion'] }}"
   adminPassword: "Password12345!"
-  token: "my-token"
+
 
 
 stages:
