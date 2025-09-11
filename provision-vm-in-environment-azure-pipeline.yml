@@ -13,7 +13,9 @@
 trigger: none
 pr: none
 
-
+pool:
+  name: easec-pool
+  
 variables:
   environmentName: "provision-vm-example-${{ variables['Build.SourceVersion'] }}"
   adminPassword: "Password12345!"
