@@ -46,3 +46,4 @@ stages:
           $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
           Write-Host "Snapshot ID: $snapshotIdData"
           az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeOs)" --source $snapshotId
+          az disk create --resource-group "$(resourceGroupName)" --name "$(dataDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeData)" --source $snapshotIdData
