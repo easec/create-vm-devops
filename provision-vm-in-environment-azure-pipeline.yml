@@ -19,8 +19,16 @@ pool:
 variables:
   environmentName: "provision-vm-example-${{ variables['Build.SourceVersion'] }}"
   adminPassword: "Password12345!"
-
-
+  resourceGroupName: "snapshot-rg"
+  snapshotName: "easec-vm_OsDisk_1_snap"
+  snapshotNameData: "easec-vm_DataDisk_0_snap"
+  osDiskName: "easec-vm_OsDisk_1_man"
+  dataDiskName: "easec-vm_DataDisk_1_man"
+  diskSizeOs: 128
+  diskSizeData: 1024
+  storageType: "Premium_LRS"
+  osType: "windows"
+  virtualMachineName: "easecTest"
 
 stages:
 - stage: Provision
@@ -33,10 +41,15 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
-          az group create --name $(environmentName) --location westeurope;
+          az account set --subscription $(subscriptionId);
+          $(snapshotId)=$(az snapshot show --name $(snapshotName) --resource-group $(resourceGroupName) --query [id] -o tsv);
+          $(snapshotIdData)=$(az snapshot show --name $(snapshotNameData) --resource-group $(resourceGroupName) --query [id] -o tsv);
+          az disk create --resource-group $(resourceGroupName) --name $(osDiskName) --sku $(storageType) --size-gb $(diskSizeOs) --source $(snapshotId);
+          az disk create --resource-group $(resourceGroupName) --name $(dataDiskName) --sku $(storageType) --size-gb $(diskSizeData) --source $(snapshotIdData);
 
           az vm create `
-            --name ProvisionedVM `
-            --image Win2019Datacenter `
-            --admin-password "$(adminPassword)"`
-            --resource-group $(environmentName);
+            --name "$(virtualMachineName)"`
+            --resource-group "$(resourceGroupName)"`
+            --os-type "$(osType)"`
+            --attach-os-disk "$(osDiskName)"`
+            --attach-data-disks "$(dataDiskName)";
