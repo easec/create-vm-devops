@@ -35,21 +35,11 @@ stages:
   jobs:
   - job:
     steps:
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'MyAzureServiceConnection'
-        scriptType: pscore
-        scriptLocation: inlineScript
-        inlineScript: |
-          $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query [id] -o tsv;
-          $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query [id] -o tsv;
-
-          az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeOs)" --source "$(snapshotId)";
-          az disk create --resource-group "$(resourceGroupName)" --name "$(dataDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeData)" --source "$(snapshotIdData)";
-
-          az vm create `
-            --name "$(virtualMachineName)"`
-            --resource-group "$(resourceGroupName)"`
-            --os-type "$(osType)"`
-            --attach-os-disk "$(osDiskName)"`
-            --attach-data-disks "$(dataDiskName)";
+     - task: AzureCLI@2
+       inputs:
+         azureSubscription: 'MyAzureServiceConnection'
+         scriptType: pscore
+         scriptLocation: inlineScript
+         inlineScript: |
+          $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
+          Write-Host "Snapshot ID: $snapshotId"
