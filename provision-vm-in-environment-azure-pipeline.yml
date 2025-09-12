@@ -43,3 +43,5 @@ stages:
          inlineScript: |
           $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
           Write-Host "Snapshot ID: $snapshotId"
+          $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
+          Write-Host "Snapshot ID: $snapshotIdData"
