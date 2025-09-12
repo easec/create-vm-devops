@@ -45,4 +45,4 @@ stages:
           Write-Host "Snapshot ID: $snapshotId"
           $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
           Write-Host "Snapshot ID: $snapshotIdData"
-          az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeOs)" --source "$(snapshotId)";
+          az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeOs)" --source $snapshotId
