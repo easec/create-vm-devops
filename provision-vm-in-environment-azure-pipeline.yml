@@ -41,7 +41,6 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: |
-          az account set --subscription $(subscriptionId);
           $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query [id] -o tsv;
           $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query [id] -o tsv;
 
