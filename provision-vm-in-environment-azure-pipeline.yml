@@ -28,7 +28,7 @@ variables:
   diskSizeData: 1024
   storageType: "Premium_LRS"
   osType: "windows"
-  virtualMachineName: "easecVm"
+  virtualMachineName: "easec-vm"
 
 stages:
 - stage: Provision
