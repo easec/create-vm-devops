@@ -17,8 +17,7 @@ pool:
   name: easec-pool
   
 variables:
-  environmentName: "provision-vm-example-${{ variables['Build.SourceVersion'] }}"
-  adminPassword: "Password12345!"
+  sourceResourceGroupName: "snapshottest-rg"
   resourceGroupName: "snapshot-rg"
   snapshotName: "easec-vm_OsDisk_1_snap"
   snapshotNameData: "easec-vm_DataDisk_0_snap"
@@ -41,6 +40,8 @@ stages:
          scriptType: pscore
          scriptLocation: inlineScript
          inlineScript: |
+          $snapshotSourceId=$(az snapshot show --name "$(snapshotName)" --resource-group "$(sourceResourceGroupName)" --query "id" -o tsv
+          Write-Host "Source Snapshot ID: $snapshotSourceId"
           $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
           Write-Host "Snapshot ID: $snapshotId"
           $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
