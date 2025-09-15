@@ -44,7 +44,8 @@ stages:
           Write-Host "Source Snapshot ID: $snapshotSourceId"
           az snapshot create --resource-group "$(resourceGroupName)" --name "$(snapshotName)" --source $snapshotSourceId --sku "$(storageType)"
           $snapshotDataSourceId = az snapshot show --name "$(snapshotNameData)" --resource-group "$(sourceResourceGroupName)" --query "id" -o tsv
-          Write-Host "Source Snapshot ID: $snapshotDataSourceId"
+          Write-Host "Source Data Snapshot ID: $snapshotDataSourceId"
+          az snapshot create --resource-group "$(resourceGroupName)" --name "$(snapshotNameData)" --source $snapshotDataSourceId --sku "$(storageType)"
           $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
           Write-Host "Snapshot ID: $snapshotId"
           $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
