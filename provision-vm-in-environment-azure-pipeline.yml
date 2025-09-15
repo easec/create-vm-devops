@@ -40,5 +40,5 @@ stages:
          scriptType: pscore
          scriptLocation: inlineScript
          inlineScript: |
-          $snapshotSourceId=$(az snapshot show --name "$(snapshotName)" --resource-group "$(sourceResourceGroupName)" --query "id" -o tsv
+          $snapshotSourceId = az snapshot show --name "$(snapshotName)" --resource-group "$(sourceResourceGroupName)" --query "id" -o tsv
           Write-Host "Source Snapshot ID: $snapshotSourceId"
