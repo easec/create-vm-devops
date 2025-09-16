@@ -46,3 +46,4 @@ stages:
          inlineScript: |
           az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --location "$(location)" --size-gb "$(diskSizeOs)" --source "$(vhdUriOS)"
           az disk create --resource-group "$(resourceGroupName)" --name "$(dataDiskName)" --sku "$(storageType)" --location "$(location)" --size-gb "$(diskSizeData)" --source "$(vhdUriData)"
+          az vm create --name "$(virtualMachineName)" --resource-group "$(resourceGroupName)" --os-type "$(osType)" --size 'Standard_D2s_v5' --attach-os-disk "$(osDiskName)" --attach-data-disks "$(dataDiskName)"
