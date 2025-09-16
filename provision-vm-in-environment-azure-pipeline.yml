@@ -17,16 +17,20 @@ pool:
   name: easec-pool
   
 variables:
-  sourceResourceGroupName: "snapshottest-rg"
+  subscriptionId: "0ac447d7-fbc3-4d3d-84d4-37bb9a71e089"
   resourceGroupName: "snapshot-rg"
-  snapshotName: "easec-vm_OsDisk_1_snap"
+  snapshotNameOs: "easec-vm_OsDisk_1_snap"
   snapshotNameData: "easec-vm_DataDisk_0_snap"
+  location: "swedencentral"
   osDiskName: "easec-vm_OsDisk_1_man"
   dataDiskName: "easec-vm_DataDisk_1_man"
   diskSizeOs: 128
-  diskSizeData: 1024
+  diskSizeData: 40
+  vhdUriOS: "https://snapshottestsa.blob.core.windows.net/snapshot/easec-vm_OsDisk_1_snap.vhd"
+  vhdUriData: "https://snapshottestsa.blob.core.windows.net/snapshot/easec-vm_DataDisk_1_snap.vhd"
   storageType: "Premium_LRS"
   osType: "windows"
+  hyperVGeneration: "v2"
   virtualMachineName: "easec-vm"
 
 stages:
@@ -40,17 +44,5 @@ stages:
          scriptType: pscore
          scriptLocation: inlineScript
          inlineScript: |
-          $snapshotSourceId = az snapshot show --name "$(snapshotName)" --resource-group "$(sourceResourceGroupName)" --query "id" -o tsv
-          Write-Host "Source Snapshot ID: $snapshotSourceId"
-          az snapshot create --resource-group "$(resourceGroupName)" --name "$(snapshotName)" --source $snapshotSourceId --sku "$(storageType)"
-          $snapshotDataSourceId = az snapshot show --name "$(snapshotNameData)" --resource-group "$(sourceResourceGroupName)" --query "id" -o tsv
-          Write-Host "Source Data Snapshot ID: $snapshotDataSourceId"
-          az snapshot create --resource-group "$(resourceGroupName)" --name "$(snapshotNameData)" --source $snapshotDataSourceId --sku "$(storageType)"
-          $snapshotId = az snapshot show --name "$(snapshotName)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
-          Write-Host "Snapshot ID: $snapshotId"
-          $snapshotIdData = az snapshot show --name "$(snapshotNameData)" --resource-group "$(resourceGroupName)" --query "id" -o tsv
-          Write-Host "Snapshot ID: $snapshotIdData"
-          az snapshot create --resource-group "$(resourceGroupName)" --name "$(snapshotNameData)" --source $snapshotDataSourceId --sku "$(storageType)"
-          az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeOs)" --source $snapshotId
-          az disk create --resource-group "$(resourceGroupName)" --name "$(dataDiskName)" --sku "$(storageType)" --size-gb "$(diskSizeData)" --source $snapshotIdData
-          az vm create --name "$(virtualMachineName)" --resource-group "$(resourceGroupName)" --os-type "$(osType)" --size 'Standard_D2s_v5' --attach-os-disk "$(osDiskName)" --attach-data-disks "$(dataDiskName)"
+
+          az disk create --resource-group $resourceGroupName --name $dataDiskName --sku $storageType --location $location --size-gb $diskSizeData --source $vhdUriData
