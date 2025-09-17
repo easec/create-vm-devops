@@ -1,13 +1,29 @@
-# This pipeline shows how to:
-# - Provision an Azure VM and register the VM in an Azure Pipelines environment.
+# This pipeline will:
+# - Provision an Azure VM.
 # - Run a task like InstallNetCoreRuntimeAndHosting on the provisioned VM.
-# - Remove the used Azure Pipelines environment and provisioned Azure resource group.
+# 
 #
 # The following variables need to be provided to the pipeline:
-# - token           : a Personal Access Token with the scopes 'Environment (Read & manage)' and 'Tokens (Read & manage)'.
-# - adminPassword   : a password for the admin user of the virtual machine.
 #
-# This pipeline also expects an Azure (Resource Manager) service connection in Azure DevOps with the name 'Azure Visual Studio Enterprise'.
+# - subscriptionId           : Subscription Id.
+# - resourceGroupName        : The name for the Resource Group where vm will be created.
+# - snapshotNameOs           : Name for snapshot containing the OS.
+# - snapshotNameData         : Name for snapshot containing the Data.
+# - location                 : Location for Managed Disks.
+# - osDiskName               : Name for Managed Disk containing the OS.
+# - dataDiskName             : Name for Managed Disk containing the data.
+# - diskSizeOs               : The size for disk containg OS.
+# - diskSizeData             : The size for disk containg data.
+# - vhdUriOS                 : Uri to image in Storage Account, for the OS.
+# - vhdUriData               : Uri to image in Storage Account, for the data.
+# - storageType              : Storage type for Managed Disk
+# - osType                   : Type of OS (windows/Linux)
+# - hyperVGeneration         : Generation for HyperV (v1/v2).
+# - vmSize                   : Size for vm.
+# - virtualMachineName       : Name for vm.
+#
+#
+# This pipeline also expects an Azure (Resource Manager) service connection in Azure DevOps with the name 'MyAzureServiceConnection'.
 
 
 trigger: none
@@ -31,6 +47,7 @@ variables:
   storageType: "Premium_LRS"
   osType: "windows"
   hyperVGeneration: "v2"
+  vmSize: "Standard_DS1_v2"
   virtualMachineName: "easec-vm"
 
 stages:
@@ -46,4 +63,4 @@ stages:
          inlineScript: |
           az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --location "$(location)" --size-gb "$(diskSizeOs)" --source "$(vhdUriOS)"
           az disk create --resource-group "$(resourceGroupName)" --name "$(dataDiskName)" --sku "$(storageType)" --location "$(location)" --size-gb "$(diskSizeData)" --source "$(vhdUriData)"
-          az vm create --name "$(virtualMachineName)" --resource-group "$(resourceGroupName)" --os-type "$(osType)" --size 'Standard_D2s_v5' --attach-os-disk "$(osDiskName)" --attach-data-disks "$(dataDiskName)"
+          az vm create --name "$(virtualMachineName)" --resource-group "$(resourceGroupName)" --os-type "$(osType)" --size "$(vmSize)" --attach-os-disk "$(osDiskName)" --attach-data-disks "$(dataDiskName)"
