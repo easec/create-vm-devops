@@ -1,6 +1,6 @@
 # This pipeline will:
 # - Provision an Azure VM.
-# - Run a task like InstallNetCoreRuntimeAndHosting on the provisioned VM.
+# 
 # 
 #
 # The following variables need to be provided to the pipeline:
@@ -12,8 +12,8 @@
 # - location                 : Location for Managed Disks.
 # - osDiskName               : Name for Managed Disk containing the OS.
 # - dataDiskName             : Name for Managed Disk containing the data.
-# - diskSizeOs               : The size for disk containg OS.
-# - diskSizeData             : The size for disk containg data.
+# - diskSizeOs               : The size for disk containing OS.
+# - diskSizeData             : The size for disk containing data.
 # - vhdUriOS                 : Uri to image in Storage Account, for the OS.
 # - vhdUriData               : Uri to image in Storage Account, for the data.
 # - storageType              : Storage type for Managed Disk
