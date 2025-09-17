@@ -46,7 +46,7 @@ variables:
   osType: "windows"
   hyperVGeneration: "v2"
   vmSize: "Standard_DS1_v2"
-  virtualMachineName: "easec-test"
+  virtualMachineName: "easec-vm"
 
 stages:
 - stage: Provision
