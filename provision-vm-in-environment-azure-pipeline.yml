@@ -40,8 +40,8 @@ variables:
   dataDiskName: "easec-vm_DataDisk_1_man"
   diskSizeOs: 128
   diskSizeData: 40
-  vhdUriOS: "https://snapshottestsa.blob.core.windows.net/snapshot/easec-vm_OsDisk_1_snap.vhd"
-  vhdUriData: "https://snapshottestsa.blob.core.windows.net/snapshot/easec-vm_DataDisk_1_snap.vhd"
+  vhdUriOS: "https://snapshottestsa.blob.core.windows.net/snapshot/easec-vm_OsDisk_1_Page_snap.vhd"
+  vhdUriData: "https://snapshottestsa.blob.core.windows.net/snapshot/easec-vm_DataDisk_1_Page_snap.vhd"
   storageType: "Premium_LRS"
   osType: "windows"
   hyperVGeneration: "v2"
@@ -49,7 +49,7 @@ variables:
   virtualMachineName: "easec-vm"
 
 stages:
-- stage: Provision
+- stage: Create_managed_disks
   jobs:
   - job:
     steps:
@@ -61,4 +61,15 @@ stages:
          inlineScript: |
           az disk create --resource-group "$(resourceGroupName)" --name "$(osDiskName)" --sku "$(storageType)" --location "$(location)" --size-gb "$(diskSizeOs)" --source "$(vhdUriOS)"
           az disk create --resource-group "$(resourceGroupName)" --name "$(dataDiskName)" --sku "$(storageType)" --location "$(location)" --size-gb "$(diskSizeData)" --source "$(vhdUriData)"
+
+- stage: Create_vm
+  jobs:
+  - job:
+    steps:
+     - task: AzureCLI@2
+       inputs:
+         azureSubscription: 'MyAzureServiceConnection'
+         scriptType: pscore
+         scriptLocation: inlineScript
+         inlineScript: |
           az vm create --name "$(virtualMachineName)" --resource-group "$(resourceGroupName)" --os-type "$(osType)" --size "$(vmSize)" --enable-agent "true" --attach-os-disk "$(osDiskName)" --attach-data-disks "$(dataDiskName)"
