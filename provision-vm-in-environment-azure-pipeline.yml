@@ -49,6 +49,7 @@ variables:
   virtualMachineName: "easec-vm"
 
 stages:
+
 - stage: Create_managed_disks
   jobs:
   - job:
