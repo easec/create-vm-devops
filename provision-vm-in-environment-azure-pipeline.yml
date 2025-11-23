@@ -23,7 +23,7 @@
 # - virtualMachineName       : Name for vm.
 #
 #
-# This pipeline also expects an Azure (Resource Manager) service connection in Azure DevOps with the name 'MyAzureServiceConnection'.
+# This pipeline also expects an Azure (Resource Manager) service connection in Azure DevOps with the name 'AzureServiceConnection'.
 
 
 trigger: none
